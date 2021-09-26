@@ -15,39 +15,14 @@ new Vue({
       duration: null,
       currentTime: null,
       isTimerPlaying: false,
-      tracks: [
-        {
-          name: '321对不起',
-          artist: '徐良&小凌',
-          cover: 'data/images/1.jpg',
-          source:
-            'https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/徐良%20-%20321对不起.mp3',
-          url: 'https://dcdlove.github.io/',
-          favorited: true,
-        },
-        {
-          name: '和平分手',
-          artist: '徐良&阿悄',
-          cover: 'data/images/2.jpg',
-          source:
-            'https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/徐良%20-%20和平分手.mp3',
-          url: 'https://dcdlove.github.io/',
-          favorited: true,
-        },
-        {
-          name: '施展咒语',
-          artist: '七公主',
-          cover: 'data/images/3.jpg',
-          source:
-            'https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/七公主%20-%20施展咒语.mp3',
-          url: 'https://dcdlove.github.io/',
-          favorited: false,
-        },
-      ],
+      tracks: [],
       currentTrack: null,
       currentTrackIndex: 0,
       transitionName: null,
     }
+  },
+  mounted() {
+    this.init()
   },
   methods: {
     play() {
@@ -142,31 +117,52 @@ new Vue({
       this.tracks[this.currentTrackIndex].favorited =
         !this.tracks[this.currentTrackIndex].favorited
     },
-  },
-  created() {
-    let vm = this
-    this.currentTrack = this.tracks[0]
-    this.audio = new Audio()
-    this.audio.src = this.currentTrack.source
-    this.audio.ontimeupdate = function () {
-      vm.generateTime()
-    }
-    this.audio.onloadedmetadata = function () {
-      vm.generateTime()
-    }
-    this.audio.onended = function () {
-      vm.nextTrack()
-      this.isTimerPlaying = true
-    }
+    getRndInteger(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min
+    },
+    init() {
+      axios
+        .get('https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/data.json')
+        .then((res) => {
+          const { data } = res
+          this.tracks = data.map((c) => {
+            return {
+              name: c.title,
+              artist: c.singer,
+              cover: 'data/images/0.jpg',
+              source: `https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/${c.singer}-${c.title}${c.ext}`,
+              url: 'https://dcdlove.github.io/',
+              favorited: false,
+            }
+          })
 
-    // this is optional (for preload covers)
-    for (let index = 0; index < this.tracks.length; index++) {
-      const element = this.tracks[index]
-      let link = document.createElement('link')
-      link.rel = 'prefetch'
-      link.href = element.cover
-      link.as = 'image'
-      document.head.appendChild(link)
-    }
+          let vm = this
+          this.currentTrack =
+            this.tracks[this.getRndInteger(0, data.length - 1)]
+          this.audio = new Audio()
+          this.audio.src = this.currentTrack.source
+          this.audio.ontimeupdate = function () {
+            vm.generateTime()
+          }
+          this.audio.onloadedmetadata = function () {
+            vm.generateTime()
+          }
+          this.audio.onended = function () {
+            vm.nextTrack()
+            this.isTimerPlaying = true
+          }
+
+          // this is optional (for preload covers)
+          for (let index = 0; index < this.tracks.length; index++) {
+            const element = this.tracks[index]
+            let link = document.createElement('link')
+            link.rel = 'prefetch'
+            link.href = element.cover
+            link.as = 'image'
+            document.head.appendChild(link)
+          }
+        })
+    },
   },
+  created() {},
 })
