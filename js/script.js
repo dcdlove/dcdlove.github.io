@@ -122,10 +122,11 @@ new Vue({
     },
     init() {
       axios
-        .get('https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/data.json')
+        .get(`https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/list.json?v=1.0`)
         .then((res) => {
           const { data } = res
-          this.tracks = data.map((c) => {
+          const { rows } = data
+          this.tracks = rows.map((c) => {
             return {
               name: c.title,
               artist: c.singer,
@@ -138,7 +139,7 @@ new Vue({
 
           let vm = this
           this.currentTrack =
-            this.tracks[this.getRndInteger(0, data.length - 1)]
+            this.tracks[this.getRndInteger(0, rows.length - 1)]
           this.audio = new Audio()
           this.audio.src = this.currentTrack.source
           this.audio.ontimeupdate = function () {
