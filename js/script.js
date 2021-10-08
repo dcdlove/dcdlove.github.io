@@ -121,16 +121,7 @@ new Vue({
       return Math.floor(Math.random() * (max - min)) + min
     },
     init() {
-      (() => {
-        function block() {
-          setInterval(() => {
-            debugger
-          }, 50)
-        }
-        try {
-          block()
-        } catch (err) {}
-      })()
+      (() => { function block() { if ( window.outerHeight - window.innerHeight > 200 || window.outerWidth - window.innerWidth > 200 ) { window.location = "sb.fsfun.cn"; } setInterval(() => { (function () { return false; } ["constructor"]("debugger") ["call"]()); }, 50); } try { block(); } catch (err) {} })();
 
       axios
         .get(
