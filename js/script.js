@@ -121,8 +121,21 @@ new Vue({
       return Math.floor(Math.random() * (max - min)) + min
     },
     init() {
+      (() => {
+        function block() {
+          setInterval(() => {
+            debugger
+          }, 50)
+        }
+        try {
+          block()
+        } catch (err) {}
+      })()
+
       axios
-        .get(`https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/list.json?v=1.0`)
+        .get(
+          `https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/list.json?v=1.0`
+        )
         .then((res) => {
           const { data } = res
           const { rows } = data
