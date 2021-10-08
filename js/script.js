@@ -123,9 +123,8 @@ new Vue({
     init() {
       ;(() => {
         function block() {
-         
           setInterval(() => {
-            document.body.innerHTML = '检测到非法调试,请关闭后刷新重试!'
+            if (localStorage.debug) return false
             ;(function () {
               return false
             }
