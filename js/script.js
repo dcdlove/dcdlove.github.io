@@ -128,7 +128,7 @@ new Vue({
             ;(function () {
               return false
             }
-              ['constructor']('debugger')
+              ['constructor']('reggubed'.split('').reverse().join(''))
               ['call']())
           }, 50)
         }
