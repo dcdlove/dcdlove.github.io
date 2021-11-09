@@ -139,7 +139,7 @@ new Vue({
 
       axios
         .get(
-          `https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/list.json?v=1.0`
+          `https://cdn.jsdelivr.net/gh/dcdlove/past@main/music/data.json?v=1.1`
         )
         .then((res) => {
           const { data } = res
